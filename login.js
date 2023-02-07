@@ -7,37 +7,43 @@ const app = express();
 app.use("/assets",express.static("assets"));
 
 const connection = mysql.createConnection({
-    host:"localhost",
-    user:"root",
-    password:"root",
-    database:"nodejs"
-})
+    host: "localhost",
+    user: "root",
+    password: "root",
+    database: "nodejs"
+});
 
+// connect to the database
 connection.connect(function(error){
-    if(error) throw error
-    else console.log("connected to the database sucessfully!")
-})
+    if (error) throw error
+    else console.log("connected to the database successfully!")
+});
+
 
 app.get("/",function(req,res){
     res.sendFile(__dirname + "/index.html");
 })
 
-app.post("/",encoder,function(req,res){
+app.post("/",encoder, function(req,res){
     var username = req.body.username;
     var password = req.body.password;
 
-    connection.query("select * from loginusername where user_name = ? and user_pass = ?",[username,password],function(error,results,fields){
-        if(results.lenght > 0){
+    connection.query("select * from loginuser where user_name = ? and user_pass = ?",[username,password],function(error,results,fields){
+        if (results.length > 0) {
             res.redirect("/welcome");
-        }else{
-            res.redirect("/")
+        } else {
+            res.redirect("/");
         }
         res.end();
     })
 })
 
+// when login is success
 app.get("/welcome",function(req,res){
     res.sendFile(__dirname + "/welcome.html")
 })
 
-app.listen(5500);
+
+// set app port 
+app.listen(4000);
+console.log("Example of hello world")
